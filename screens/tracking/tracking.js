@@ -5,8 +5,13 @@ import {StyleSheet, View, Text, Image, Pressable} from 'react-native';
 export function TRACKING({navigation}) {
   return (
     <View style={styles.homeTracking}>
-      <View style={styles.homeTrackingChild} />
-      <Text style={styles.eBeat}>#E-BEAT</Text>
+      <View
+        style={styles.homeTrackingChild}
+        className="w-full scale-150 -translate-y-1"
+      />
+      <Text style={styles.eBeat} className="font-extrabold">
+        E-BEAT
+      </Text>
       <Pressable
         style={[styles.frame, styles.framePosition]}
         onPress={() => {}}>
@@ -21,7 +26,10 @@ export function TRACKING({navigation}) {
           resizeMode="cover" /*source="Vector.png"*/
         />
       </View>
-      <View style={[styles.homeTrackingItem, styles.homePosition]} />
+      <View
+        style={[styles.homeTrackingItem, styles.homePosition]}
+        className="scale-125 -translate-y-1"
+      />
       <View style={[styles.trackingWrapper, styles.wrapperFlexBox]}>
         <Text style={styles.tracking}>Tracking</Text>
       </View>
@@ -34,14 +42,19 @@ export function TRACKING({navigation}) {
       </Pressable>
       <View style={styles.homeTrackingInner} />
       <Text style={[styles.view, styles.viewTypo]}>View</Text>
-      <View style={[styles.rectangleView, styles.rectangleViewPosition]} />
+
       <View style={[styles.homeTrackingChild1, styles.rectangleViewPosition]} />
       <Image
         style={styles.image1Icon}
         resizeMode="cover" /*source="image 1.png"*/
       />
-      <View style={[styles.homeTrackingChild2, styles.homePosition]} />
-      <Text style={[styles.searchOfficer, styles.viewTypo]}>
+      <View
+        style={[styles.homeTrackingChild2, styles.homePosition]}
+        className="scale-110"
+      />
+      <Text
+        style={[styles.searchOfficer, styles.viewTypo]}
+        className="translate-x-2 font-bold">
         Search officer...
       </Text>
       <Image

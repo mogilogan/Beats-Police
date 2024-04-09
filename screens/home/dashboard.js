@@ -5,9 +5,18 @@ import IconButton from 'react-native-vector-icons/Ionicons';
 
 export function HOMEDB({navigation}) {
   return (
-    <View style={styles.homeDb}>
-      <View style={styles.homeDbChild} />
-      <Text style={styles.eBeat}>#E-BEAT</Text>
+    <View className="w-full">
+      <View
+        style={styles.homeDbChild}
+        className="w-full scale-150 -translate-y-1"
+      />
+      <View
+        style={styles.homeDbChild}
+        className="w-full scale-150 translate-y-[22px]"
+      />
+      <Text style={styles.eBeat} className="font-extrabold">
+        E-BEAT
+      </Text>
       <View style={[styles.frame, styles.framePosition]}>
         <IconButton
           icon="person-circle"
@@ -32,40 +41,56 @@ export function HOMEDB({navigation}) {
         onPress={() => {
           navigation.navigate('Tracking');
         }}>
-        <Text style={styles.tracking}>Tracking</Text>
+        <Text className="text-black text-xl font-bold">Tracking</Text>
       </Pressable>
       <View style={[styles.dashboardWrapper, styles.homeDbInnerPosition]}>
-        <Text style={styles.dashboard}>Dashboard</Text>
+        <Text className="text-black text-xl font-bold">Dashboard</Text>
       </View>
       <View style={[styles.homeDbInner, styles.homeDbInnerPosition]} />
       <Pressable
         style={[styles.homeDbChild1, styles.homeChildLayout]}
+        className="scale-110"
         onPress={() => {
           navigation.navigate('SelectBeat');
         }}
       />
       <Pressable
         style={[styles.rectanglePressable, styles.homeChildLayout]}
+        className="-translate-x-4"
         onPress={() => {
           navigation.navigate('ViewBeat');
         }}
       />
       <Pressable
         style={[styles.homeDbChild2, styles.homeChildLayout]}
+        className=" scale-x-125"
         onPress={() => {
           navigation.navigate('Profile');
         }}
       />
       <Pressable
         style={[styles.homeDbChild3, styles.homeChildLayout]}
+        className="scale-110"
         onPress={() => {
           navigation.navigate('ReportBeat');
         }}
       />
-      <Text style={[styles.assign, styles.assignTypo]}>Assign</Text>
-      <Text style={[styles.view, styles.viewTypo]}>View</Text>
-      <Text style={[styles.update, styles.viewTypo]}>Update</Text>
-      <Text style={[styles.reports, styles.assignTypo]}>Reports</Text>
+      <Text
+        style={[styles.assign, styles.assignTypo]}
+        className="px-5 font-bold">
+        Assign
+      </Text>
+      <Text style={[styles.view, styles.viewTypo]} className="px-5 font-bold">
+        View
+      </Text>
+      <Text style={[styles.update, styles.viewTypo]} className="px-5 font-bold">
+        Update
+      </Text>
+      <Text
+        style={[styles.reports, styles.assignTypo]}
+        className="px-5 font-bold">
+        Reports
+      </Text>
     </View>
   );
 }

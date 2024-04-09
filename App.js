@@ -11,7 +11,7 @@ const store = configureStore({
 });
 const App = () => {
   return (
-    <Provider store={store}>
+    <Provider store={store} className="w-full">
       <Screens />
     </Provider>
   );

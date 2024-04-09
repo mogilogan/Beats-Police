@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -53,22 +53,45 @@ function Home() {
         },
         headerShown: false,
       })}>
-        
       <Tab.Screen name="DashBoard" options={{header: () => null}}>
         {() => (
           <SettingsStack.Navigator>
-            <SettingsStack.Screen name="dashBoard" component={HOMEDB} options={{header: () => null}}/>
-            <SettingsStack.Screen name="Tracking" component={TRACKING} options={{header: () => null}}/>
-            <SettingsStack.Screen name="ViewBeat" component={VIEWBEAT} options={{header: () => null}}/>
-            <SettingsStack.Screen name="ReportBeat" component={REPORTBEAT} options={{header: () => null}}/>
-            <SettingsStack.Screen name="SelectBeat" component={SELECTBEAT} options={{header: () => null}}/>
+            <SettingsStack.Screen
+              name="dashBoard"
+              component={HOMEDB}
+              options={{header: () => null}}
+            />
+            <SettingsStack.Screen
+              name="Tracking"
+              component={TRACKING}
+              options={{header: () => null}}
+            />
+            <SettingsStack.Screen
+              name="ViewBeat"
+              component={VIEWBEAT}
+              options={{header: () => null}}
+            />
+            <SettingsStack.Screen
+              name="ReportBeat"
+              component={REPORTBEAT}
+              options={{header: () => null}}
+            />
+            <SettingsStack.Screen
+              name="SelectBeat"
+              component={SELECTBEAT}
+              options={{header: () => null}}
+            />
           </SettingsStack.Navigator>
         )}
       </Tab.Screen>
       <Tab.Screen name="Profile" options={{header: () => null}}>
         {() => (
           <SettingsStack.Navigator>
-            <SettingsStack.Screen name="profile" component={PROFILE} options={{header: () => null}}/>
+            <SettingsStack.Screen
+              name="profile"
+              component={PROFILE}
+              options={{header: () => null}}
+            />
             <SettingsStack.Screen name="Directory" component={DIRECTORY} />
             <Stack.Screen name="About" component={ABOUT} />
           </SettingsStack.Navigator>
@@ -86,7 +109,6 @@ const Screens = ({navigation}) => {
       if (!user) {
         navigation.navigate('LoginPage');
       }
-      
     };
 
     checkUser();
@@ -100,21 +122,14 @@ const Screens = ({navigation}) => {
     return () => clearInterval(secTimer);
   }, []);
 
-  
-
   return (
     <NavigationContainer>
       <Stack.Navigator
-         screenOptions={{
+        screenOptions={{
           headerStyle: {
             backgroundColor: '#000',
           },
           headerTintColor: '#0F4210',
-          headerRight: () => (
-            <View> // Ensure proper styling for visibilitys
-             
-            </View>
-          ),
         }}>
         <Stack.Screen
           name="Home"
@@ -122,9 +137,7 @@ const Screens = ({navigation}) => {
           options={{header: () => null}}
         />
 
-   
-          <Stack.Screen name="LoginPage" component={LOGINPAGE} />
-       
+        <Stack.Screen name="LoginPage" component={LOGINPAGE} />
       </Stack.Navigator>
     </NavigationContainer>
   );
