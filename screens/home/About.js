@@ -7,18 +7,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const NOTIFICATIONS = ({navigation}) => {
   const {aboutData} = useSelector(state => state.about);
   const dispatch = useDispatch();
-  const [id,setID]=React.useState();
+  const [id, setID] = React.useState();
   const [error, setError] = React.useState('');
   React.useEffect(() => {
     const fetchUser = async () => {
       try {
-        console.log("ok")
-        const user = JSON.parse(await  AsyncStorage.getItem('beatsauth'));
+        console.log('ok');
+        const user = JSON.parse(await AsyncStorage.getItem('beatsauth'));
         const officerId = user?.userData?.Officer_Id; // Make sure userData is parsed if it's a string
         console.log(officerId);
         setID(officerId);
         if (officerId) {
-          const formData = {"officer_id":officerId}
+          const formData = {officer_id: officerId};
           dispatch(aboutuser(formData, setError));
         }
       } catch (error) {
@@ -26,7 +26,7 @@ const NOTIFICATIONS = ({navigation}) => {
         console.error(error);
       }
     };
-  
+
     fetchUser();
   }, [dispatch]);
   return (

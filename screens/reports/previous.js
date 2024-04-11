@@ -1,166 +1,52 @@
-import * as React from "react";
-import { StyleSheet, View, Text, Image, Pressable } from "react-native";
+import * as React from 'react';
+import {StyleSheet, View, Text, Image, Pressable} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
+import {data_date} from './reportData';
 
-export function PREVIOUS({ navigation }) {
+export function PREVIOUS({navigation}) {
   return (
-    <View style={styles.reportPage2}>
-      <View style={[styles.reportPage2Child, styles.reportPosition]} />
-      <View style={[styles.reportPage2Item, styles.reportPosition]} />
-      <View style={styles.reportPage2Inner} />
-      <Text style={styles.eBeat}>#E-BEAT</Text>
-      <Pressable
-        style={[styles.frame, styles.vectorPosition]}
-        onPress={() => {}}
-      >
-        <Image
-          style={styles.vectorIcon3}
-          resizeMode="cover" /*source="Vector.png"*/
-        />
-      </Pressable>
-      <View style={[styles.vectorWrapper, styles.vectorPosition]}>
-        <Image
-          style={styles.vectorIcon4}
-          resizeMode="cover" /*source="Vector.png"*/
-        />
+    <ScrollView>
+      <View className="w-full  h-[100px] bg-[#8b98d8] ">
+        <Text className="text-3xl font-bold text-black  top-[47px] left-[50px]">
+          E-BEAT
+        </Text>
       </View>
-      <Pressable
-        style={[styles.vectorContainer, styles.vectorPosition]}
-        onPress={() => {}}
-      >
-        <Image
-          style={styles.vectorIcon3}
-          resizeMode="cover" /*source="Vector.png"*/
-        />
-      </Pressable>
-      <View style={[styles.rectangleView, styles.rectangleViewPosition]} />
-      <Text style={[styles.previousReports, styles.ddmmyyyyTypo]}>
-        PREVIOUS REPORTS
-      </Text>
-      <View style={[styles.reportPage2Child1, styles.rectangleViewPosition]} />
-      <Text style={[styles.ddmmyyyy, styles.ddmmyyyyTypo]}>DD|MM|YYYY</Text>
-      <View style={styles.calenderWrapper}>
-        <Image
-          style={styles.calenderIcon}
-          resizeMode="cover" /*source="CALENDER.png"*/
-        />
+      <View className="flex w-full justify-center items-center  pt-10">
+        <View className="flex flex-row  justify-around items-center w-[50%] bg-[#b0b9e2] rounded-full h-[40px]">
+          <View className="bg-[#b3bded] w-[50%] rounded-l-full h-[100%] flex justify-center items-center ">
+            <Pressable
+              className="w-full h-full flex justify-center items-center"
+              onPress={() => {
+                navigation.navigate('ReportBeat');
+              }}>
+              <Text className="text-black font-semibold">Officers</Text>
+            </Pressable>
+          </View>
+          <View className=" bg-[#9ca8e3] w-[50%] rounded-r-full h-[100%] flex justify-center items-center">
+            <Pressable className="w-full flex justify-center items-center h-full">
+              <Text className="text-white">Past</Text>
+            </Pressable>
+          </View>
+        </View>
       </View>
-    </View>
+      <View className="w-full  pt-5 flex justify-center items-center pb-10">
+        <View className="w-[90%] flex flex-row flex-wrap gap-4 ml-2 ">
+          {data_date.map(report => {
+            return (
+              <View className=" w-[40%] bg-[#b3bded] rounded-2xl">
+                <View className=" min-h-[100px] rounded-t-2xl"></View>
+                <View className="bg-[#9ca8e3] rounded-b-2xl">
+                  <Text className="text-center py-2 text-black font-semibold">
+                    on {report.officer_name}
+                  </Text>
+                </View>
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  reportPosition: {
-    height: 25,
-    backgroundColor: "#d9d9d9",
-    width: 360,
-    left: "50%",
-    marginLeft: -180,
-    position: "absolute",
-  },
-  vectorPosition: {
-    padding: 5,
-    flexDirection: "row",
-    top: 47,
-    position: "absolute",
-  },
-  rectangleViewPosition: {
-    height: 50,
-    backgroundColor: "#bbc7e7",
-    left: "50%",
-    position: "absolute",
-  },
-  ddmmyyyyTypo: {
-    fontFamily: "Roboto",
-    letterSpacing: 1.2,
-    fontSize: 20,
-    textAlign: "left",
-    left: "50%",
-    position: "absolute",
-  },
-  reportPage2Child: {
-    top: 0,
-  },
-  reportPage2Item: {
-    bottom: 0,
-  },
-  reportPage2Inner: {
-    top: 25,
-    backgroundColor: "#8b98d8",
-    height: 75,
-    width: 360,
-    left: "50%",
-    marginLeft: -180,
-    position: "absolute",
-  },
-  eBeat: {
-    marginLeft: -120,
-    fontSize: 30,
-    letterSpacing: 1.8,
-    fontFamily: "Roboto",
-    color: "#000",
-    width: 160,
-    textAlign: "left",
-    top: 47,
-    left: "50%",
-    position: "absolute",
-  },
-  vectorIcon3: {
-    width: 20,
-    height: 20,
-  },
-  frame: {
-    left: 317,
-  },
-  vectorIcon4: {
-    width: 18,
-    height: 20,
-  },
-  vectorWrapper: {
-    left: 279,
-  },
-  vectorContainer: {
-    left: 21,
-  },
-  rectangleView: {
-    marginLeft: -175,
-    top: 115,
-    borderRadius: 10,
-    width: 350,
-  },
-  previousReports: {
-    marginLeft: -102,
-    top: 128,
-    color: "#001097",
-  },
-  reportPage2Child1: {
-    marginLeft: -150,
-    top: 197,
-    borderRadius: 50,
-    width: 300,
-  },
-  ddmmyyyy: {
-    marginLeft: -73,
-    top: 211,
-    color: "#fff",
-  },
-  calenderIcon: {
-    width: 16,
-    height: 16,
-  },
-  calenderWrapper: {
-    top: 208,
-    left: 269,
-    padding: 7,
-    flexDirection: "row",
-    position: "absolute",
-  },
-  reportPage2: {
-    backgroundColor: "#fff",
-    flex: 1,
-    width: "100%",
-    height: 800,
-    overflow: "hidden",
-  },
-});
 
 export default PREVIOUS;

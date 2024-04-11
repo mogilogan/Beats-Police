@@ -26,6 +26,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialIcons';
 import {View} from 'react-native';
+import ABOUT_OFFICER from './screens/home/About_officer';
 
 const Stack = createStackNavigator();
 
@@ -77,6 +78,11 @@ function Home() {
               options={{header: () => null}}
             />
             <SettingsStack.Screen
+              name="ReportDate"
+              component={PREVIOUS}
+              options={{header: () => null}}
+            />
+            <SettingsStack.Screen
               name="SelectBeat"
               component={SELECTBEAT}
               options={{header: () => null}}
@@ -84,7 +90,7 @@ function Home() {
           </SettingsStack.Navigator>
         )}
       </Tab.Screen>
-      <Tab.Screen name="Profile" options={{header: () => null}}>
+      <Tab.Screen name="Profile" options={{header: () => null}} className="">
         {() => (
           <SettingsStack.Navigator>
             <SettingsStack.Screen
@@ -92,7 +98,17 @@ function Home() {
               component={PROFILE}
               options={{header: () => null}}
             />
-            <SettingsStack.Screen name="Directory" component={DIRECTORY} />
+            <SettingsStack.Screen
+              name="Directory"
+              component={DIRECTORY}
+              options={{header: () => null}}
+            />
+            <Stack.Screen
+              name="OfficerDetail"
+              component={ABOUT_OFFICER}
+              options={{header: () => null}}
+            />
+
             <Stack.Screen name="About" component={ABOUT} />
           </SettingsStack.Navigator>
         )}
@@ -136,8 +152,17 @@ const Screens = ({navigation}) => {
           component={Home}
           options={{header: () => null}}
         />
+        <Stack.Screen
+          name="LoginPage"
+          component={LOGINPAGE}
+          options={{header: () => null}}
+        />
 
-        <Stack.Screen name="LoginPage" component={LOGINPAGE} />
+        <Stack.Screen
+          name="SelectBeat"
+          component={SELECTBEAT}
+          options={{header: () => null}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
