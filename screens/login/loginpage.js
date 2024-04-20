@@ -3,6 +3,7 @@ import {Image, SafeAreaView, StyleSheet, View} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 
 import {useDispatch} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {signin} from '../../actions/auth';
 
@@ -10,6 +11,18 @@ export function LOGINPAGE({navigation}) {
   const [officer, setOfficer] = React.useState('');
   const [passowrd, setPassword] = React.useState('');
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    const checkUser = async () => {
+      const user = JSON.parse(await AsyncStorage.getItem('beatsauth'));
+      console.log(user)
+      if (user) {
+        navigation.navigate('Home');
+      }
+    };
+
+    checkUser();
+  }, [navigation]);
 
   const handlelogin = async () => {
     const form = {officer_id: officer, password: passowrd};
@@ -37,6 +50,7 @@ export function LOGINPAGE({navigation}) {
         <TextInput
           placeholder="Password"
           style={[styles.component3Child]}
+          secureTextEntry={true}
           mode="outlined"
           onChangeText={newStatus => setPassword(newStatus)}
         />

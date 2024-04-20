@@ -5,6 +5,7 @@ const aboutReducer = (state = {aboutData: {}}, action) => {
   switch (action.type) {
     case actionType.ABOUT:
       return {...state, aboutData: action.data, loading: false, errors: null};
+   
     
     default:
       return state;

@@ -16,3 +16,7 @@ API.interceptors.request.use(req => {
 // login api
 export const signIn = formData => API.post('/logins', formData);
 export const aboutUser = formData => API.post('/about', formData);
+export const CheckAssign = formData => API.post('/assign/check',formData);
+export const assignPc = formData => API.post('/assign',formData);
+
+

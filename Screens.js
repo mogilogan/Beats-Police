@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -14,7 +14,6 @@ import DIRECTORY from './screens/home/directory';
 import ABOUT from './screens/home/About';
 import WELCOME from './screens/login/welcome';
 
-import VIEWDETAILS from './screens/view/viewdetails';
 import PREVIOUS from './screens/reports/previous';
 import SELECT from './screens/assign/select';
 import TRACKING from './screens/tracking/tracking';
@@ -25,14 +24,25 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialIcons';
-import {View} from 'react-native';
+
+import TimeDisplay from './screens/time/TimeDisplay';
+import CHECK from './screens/assigned/Check';
 
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
 const SettingsStack = createNativeStackNavigator();
 
-function Home() {
+function Home({}) {
+  const [users, setUser] = useState(3);
+  useEffect(() => {
+    const checkUser = async () => {
+      const user = JSON.parse(await AsyncStorage.getItem('beatsauth'));
+      setUser(user?.userData?.rank);
+    };
+
+    checkUser();
+  }, []);
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -46,6 +56,9 @@ function Home() {
           } else if (route.name === 'Profile') {
             iconName = 'person';
             color = '#fff54';
+          } else if (route.name === 'Live') {
+            iconName = 'person';
+            color = '#fff50';
           }
 
           // You can return any component that you like here!
@@ -53,22 +66,62 @@ function Home() {
         },
         headerShown: false,
       })}>
-        
-      <Tab.Screen name="DashBoard" options={{header: () => null}}>
-        {() => (
-          <SettingsStack.Navigator>
-            <SettingsStack.Screen name="dashBoard" component={HOMEDB} options={{header: () => null}}/>
-            <SettingsStack.Screen name="Tracking" component={TRACKING} options={{header: () => null}}/>
-            <SettingsStack.Screen name="ViewBeat" component={VIEWBEAT} options={{header: () => null}}/>
-            <SettingsStack.Screen name="ReportBeat" component={REPORTBEAT} options={{header: () => null}}/>
-            <SettingsStack.Screen name="SelectBeat" component={SELECTBEAT} options={{header: () => null}}/>
-          </SettingsStack.Navigator>
-        )}
-      </Tab.Screen>
+      {
+        {
+          1: (
+            <Tab.Screen
+              name="DashBoard"
+              children={() => (
+                <SettingsStack.Navigator>
+                  <SettingsStack.Screen
+                    name="dashBoard"
+                    component={HOMEDB}
+                    options={{header: () => null}}
+                  />
+                  <SettingsStack.Screen
+                    name="Tracking"
+                    component={TRACKING}
+                    options={{header: () => null}}
+                  />
+
+                  <SettingsStack.Screen
+                    name="ReportBeat"
+                    component={REPORTBEAT}
+                    options={{header: () => null}}
+                  />
+                  <SettingsStack.Screen
+                    name="SelectBeat"
+                    component={SELECTBEAT}
+                    options={{header: () => null}}
+                  />
+                </SettingsStack.Navigator>
+              )}
+              options={{header: () => null}}
+            />
+          ),
+          0: (
+            <Tab.Screen name="Live" options={{header: () => null}}>
+              {() => (
+                <SettingsStack.Navigator>
+                  <SettingsStack.Screen
+                    name="Check"
+                    component={CHECK}
+                    options={{header: () => null}}
+                  />
+                </SettingsStack.Navigator>
+              )}
+            </Tab.Screen>
+          ),
+        }[users]
+      }
       <Tab.Screen name="Profile" options={{header: () => null}}>
         {() => (
           <SettingsStack.Navigator>
-            <SettingsStack.Screen name="profile" component={PROFILE} options={{header: () => null}}/>
+            <SettingsStack.Screen
+              name="profile"
+              component={PROFILE}
+              options={{header: () => null}}
+            />
             <SettingsStack.Screen name="Directory" component={DIRECTORY} />
             <Stack.Screen name="About" component={ABOUT} />
           </SettingsStack.Navigator>
@@ -83,10 +136,10 @@ const Screens = ({navigation}) => {
   useEffect(() => {
     const checkUser = async () => {
       const user = JSON.parse(await AsyncStorage.getItem('beatsauth'));
+      console.log(user);
       if (!user) {
         navigation.navigate('LoginPage');
       }
-      
     };
 
     checkUser();
@@ -100,32 +153,21 @@ const Screens = ({navigation}) => {
     return () => clearInterval(secTimer);
   }, []);
 
-  
-
   return (
     <NavigationContainer>
-      <Stack.Navigator
-         screenOptions={{
-          headerStyle: {
-            backgroundColor: '#000',
-          },
-          headerTintColor: '#0F4210',
-          headerRight: () => (
-            <View> // Ensure proper styling for visibilitys
-             
-            </View>
-          ),
-        }}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="LoginPage"
+          component={LOGINPAGE}
+          options={{header: () => null}}
+        />
         <Stack.Screen
           name="Home"
           component={Home}
           options={{header: () => null}}
         />
-
-   
-          <Stack.Screen name="LoginPage" component={LOGINPAGE} />
-       
       </Stack.Navigator>
+      <TimeDisplay />
     </NavigationContainer>
   );
 };
