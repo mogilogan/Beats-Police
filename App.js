@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Screens from './Screens';
+import Screens from './screen/Screens';
 import {Provider} from 'react-redux';
 import {configureStore} from '@reduxjs/toolkit';
 import {reducers} from './reducers/index';

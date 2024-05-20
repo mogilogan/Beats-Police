@@ -1,72 +1,34 @@
 import * as React from 'react';
-import {StyleSheet, View, Text, Image, Pressable} from 'react-native';
+import {StyleSheet, View, Text, Image, Pressable,BackHandler,Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconButton from 'react-native-vector-icons/Ionicons';
 
 export function HOMEDB({navigation}) {
+  
+
   return (
-    <View style={styles.homeDb}>
-      <View style={styles.homeDbChild} />
-      <Text style={styles.eBeat}>#E-BEAT</Text>
-      <View style={[styles.frame, styles.framePosition]}>
-        <IconButton
-          icon="person-circle"
-          size={20}
-          onPress={() => {
-            navigation.navigate('Profile');
-          }}
-        />
-      </View>
-      <View style={[styles.vectorWrapper, styles.framePosition]}>
-        <Icon
-          source="person-circle"
-          style={styles.vectorIcon3}
-          onPress={() => {
-            navigation.navigate('Notifications');
-          }}
-        />
-      </View>
-      <View style={styles.homeDbItem} />
-      <Pressable
-        style={[styles.trackingWrapper, styles.wrapperFlexBox]}
-        onPress={() => {
-          navigation.navigate('Tracking');
-        }}>
-        <Text style={styles.tracking}>Tracking</Text>
-      </Pressable>
-      <View style={[styles.dashboardWrapper, styles.homeDbInnerPosition]}>
-        <Text style={styles.dashboard}>Dashboard</Text>
-      </View>
-      <View style={[styles.homeDbInner, styles.homeDbInnerPosition]} />
-      <Pressable
-        style={[styles.homeDbChild1, styles.homeChildLayout]}
-        onPress={() => {
-          navigation.navigate('SelectBeat');
-        }}
-      />
-      <Pressable
-        style={[styles.rectanglePressable, styles.homeChildLayout]}
-        onPress={() => {
-          navigation.navigate('ViewBeat');
-        }}
-      />
-      <Pressable
-        style={[styles.homeDbChild2, styles.homeChildLayout]}
-        onPress={() => {
-          navigation.navigate('Profile');
-        }}
-      />
-      <Pressable
-        style={[styles.homeDbChild3, styles.homeChildLayout]}
-        onPress={() => {
-          navigation.navigate('ReportBeat');
-        }}
-      />
-      <Text style={[styles.assign, styles.assignTypo]}>Assign</Text>
-      <Text style={[styles.view, styles.viewTypo]}>View</Text>
-      <Text style={[styles.update, styles.viewTypo]}>Update</Text>
-      <Text style={[styles.reports, styles.assignTypo]}>Reports</Text>
-    </View>
+    <View className="flex justify-center items-center w-full h-[500px] ">
+        <View className="w-screen flex gap-10 justify-center items-center">
+          <View className="w-[80%] flex justify-center items-center bg-[#9ca7dd] h-[100px] rounded-xl">
+            <Pressable
+              className="w-full h-full justify-center items-center"
+              onPress={() => {
+                navigation.navigate('SelectBeat');
+              }}>
+              <Text className="text-xl font-bold">Assign</Text>
+            </Pressable>
+          </View>
+          <View className="w-[80%] flex justify-center items-center bg-[#9ca7dd] h-[100px] rounded-xl">
+            <Pressable
+              className="w-full h-full justify-center items-center"
+              onPress={() => {
+                navigation.navigate('ReportBeat');
+              }}>
+              <Text className="text-xl font-bold">Reports</Text>
+            </Pressable>
+          </View>
+        </View>
+        </View>
   );
 }
 

@@ -6,23 +6,30 @@ import {useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {signin} from '../../actions/auth';
+import { useFocusEffect } from '@react-navigation/native';
 
 export function LOGINPAGE({navigation}) {
   const [officer, setOfficer] = React.useState('');
   const [passowrd, setPassword] = React.useState('');
   const dispatch = useDispatch();
 
-  React.useEffect(() => {
-    const checkUser = async () => {
-      const user = JSON.parse(await AsyncStorage.getItem('beatsauth'));
-      console.log(user)
-      if (user) {
-        navigation.navigate('Home');
-      }
-    };
+  useFocusEffect(
+    React.useCallback(() => {
+      const checkUser = async () => {
+        const user = JSON.parse(await AsyncStorage.getItem('beatsauth'));
+        console.log(user);
+        if (user) {
+          navigation.navigate('Home');
+        }
+      };
 
-    checkUser();
-  }, [navigation]);
+      checkUser();
+
+      return () => {
+        // Optional cleanup can go here
+      };
+    }, [navigation])
+  );
 
   const handlelogin = async () => {
     const form = {officer_id: officer, password: passowrd};

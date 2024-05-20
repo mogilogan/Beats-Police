@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, Image, Pressable, SafeAreaView, ScrollView} from
 import {useState} from 'react';
 import {Dropdown} from 'react-native-element-dropdown';
 import DatePicker from 'react-native-date-picker'
-import {beat, beat_subdivision} from './data';
+import {beat, beat_subdivision,officers} from './data';
 import { Button } from 'react-native-paper';
 import { assginpc } from '../../actions/about';
 
@@ -17,12 +17,15 @@ export function SELECTBEAT({navigation}) {
   const [enddate, setEndDate] = useState(new Date())
   const [error,setError] = useState("");
   
+  const [pc, setPc] = useState("");
   const [value, setValue] = useState("");
   const [value1, setValue1] = useState("");
+  const [location, setLocation] = useState("");
   const [isFocus, setIsFocus] = useState(false);
   
   const [user, setUser] = React.useState({});
   const dispatch = useDispatch();
+
   const findArea = index => {
     if (beat_subdivision[index] != -1) {
       return beat_subdivision[index];
@@ -53,11 +56,13 @@ export function SELECTBEAT({navigation}) {
 console.log("ok")
     const formData = {
       "assigned_by":user?.userData.Officer_Id,
+      "Station_id":user?.userData.Station_id,
       "beat":value,
       "hamplets":value1,
       "start_time":startdate,
       "end_time":enddate,
-      "Officer_Id":"PC_2645"
+      "coordi":location,
+      "Officer_Id":pc
     }
 
     dispatch(assginpc(formData,setError,navigation))
@@ -117,11 +122,38 @@ console.log("ok")
             onBlur={() => setIsFocus(false)}
             onChange={item => {
               setValue1(item.value);
+              setLocation(item.location.join(','));
               setIsFocus(false);
             }}
           />
         </View>
       </View>}
+
+      <View className="flex w-full justify-center items-center">
+        <View className="w-[80%] flex justify-center">
+          <Dropdown
+            style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={officers}
+        
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder={!isFocus ? 'Select Officer' : '...'}
+            searchPlaceholder="Search..."
+            value={value}
+            onFocus={() => setIsFocus(true)}
+            onBlur={() => setIsFocus(false)}
+            onChange={item => {
+              setPc(item.value);
+              setIsFocus(false);
+            }}
+          />
+        </View>
+      </View>
       <View>
        
       <Text>Start Time: </Text>
