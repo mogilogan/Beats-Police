@@ -1,56 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import io from 'socket.io-client';
+import * as React from 'react';
+import {
+  View,
+  Text,
+  PermissionsAndroid,
+  Button,
+  BackHandler,
+  Alert,
+} from 'react-native';
 
-const Tracking = () => {
-  const [socket, setSocket] = useState(null);
-  const [workers, setWorkers] = useState([]);
+import {connect, useDispatch, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {beatassigned, beatfetch} from '../../actions/about';
+import {useFocusEffect} from '@react-navigation/native';
+import Fetch from './Fetch';
 
-  useEffect(() => {
-    const newSocket = io('http://10.0.2.2:8000');
-    setSocket(newSocket);
+const Tracking = ({navigation}) => {
+  const dispatch = useDispatch();
+  const {beatData} = useSelector(state => state.beat);
+  const [user, setUser] = React.useState();
+  const [dt, setDt] = React.useState(new Date().toLocaleString());
 
-    return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-    };
+  React.useEffect(() => {
+    let secTimer = setInterval(() => {
+      setDt(new Date().toLocaleString());
+    }, 1000);
+
+    return () => clearInterval(secTimer);
   }, []);
 
-  useEffect(() => {
-    if (socket) {
-      socket.on('currentLocations', locations => {
-        setWorkers(Object.values(locations)); // Assuming locations is an object with worker IDs as keys
-      });
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+      return () => {
+        // Any cleanup would go here
+      };
+    }, [dispatch, navigation]),
+  );
+
+  const fetchData = async () => {
+    try {
+      const userString = await AsyncStorage.getItem('beatsauth');
+      const user = JSON.parse(userString);
+
+      if (user?.userData) {
+        dispatch(beatfetch());
+        setUser(user);
+      }
+    } catch (error) {
+      // Handle or log error
+      console.error('Failed to fetch data:', error);
     }
-  }, [socket]);
+  };
+
+  React.useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <MapView style={styles.map} initialRegion={{ latitude: 0, longitude: 0, latitudeDelta: 10, longitudeDelta: 10 }}>
-        {workers.map((worker, index) => (
-          <Marker
-            key={index}
-            coordinate={{ latitude: worker.latitude, longitude: worker.longitude }}
-            title={`Worker ${index + 1}`}
-          />
-        ))}
-      </MapView>
+    <View className="flex-1  mt-9">
+      {beatData != null || undefined ? (
+        <Fetch user={user} beat={beatData}  />
+      ) : (
+        <Text>Loading</Text>
+      )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  map: {
-    flex: 1,
-    width: '100%',
-  },
-});
 
 export default Tracking;

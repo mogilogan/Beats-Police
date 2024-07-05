@@ -1,38 +1,31 @@
 import * as React from 'react';
-import {StyleSheet, View, Text, Image, Pressable, SafeAreaView, ScrollView} from 'react-native';
+import {StyleSheet, View, Text, SafeAreaView, ScrollView, Pressable, Modal} from 'react-native';
 import {useState} from 'react';
-import {Dropdown} from 'react-native-element-dropdown';
-import DatePicker from 'react-native-date-picker'
+
+import Icon from 'react-native-vector-icons/Ionicons'
+
 import {beat, beat_subdivision,officers} from './data';
 import { Button } from 'react-native-paper';
-import { assginpc } from '../../actions/about';
+import { beatavailable, beatfetch, beatremove, beatupdate } from '../../actions/about';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import babelConfig from '../../babel.config';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 
 export function SELECTBEAT({navigation}) {
-  const [startdate, setStartDate] = useState(new Date())
-  const [enddate, setEndDate] = useState(new Date())
-  const [error,setError] = useState("");
-  
-  const [pc, setPc] = useState("");
-  const [value, setValue] = useState("");
-  const [value1, setValue1] = useState("");
-  const [location, setLocation] = useState("");
-  const [isFocus, setIsFocus] = useState(false);
-  
+
+
+  const {beatData,available} = useSelector(state => state.beat);
   const [user, setUser] = React.useState({});
   const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const findArea = index => {
-    if (beat_subdivision[index] != -1) {
-      return beat_subdivision[index];
-    } else {
-      return null;
-    }
-  };
+  const [time,setTime] = useState();
+  const [beat,setBeat] = useState();
+
+
 
 
   React.useEffect(() => {
@@ -45,29 +38,45 @@ export function SELECTBEAT({navigation}) {
         navigation.navigate('LoginPage');
       }
     };
-
     fetchData();
   }, []);
 
+useFocusEffect(
+  React.useCallback(() => {
+    fetchbeat();
+    return () => {
+      // Any cleanup would go here
+    };
+  }, [dispatch, navigation]),
+);;
 
-
-
-  const handleAssign =()=>{
-console.log("ok")
-    const formData = {
-      "assigned_by":user?.userData.Officer_Id,
-      "Station_id":user?.userData.Station_id,
-      "beat":value,
-      "hamplets":value1,
-      "start_time":startdate,
-      "end_time":enddate,
-      "coordi":location,
-      "Officer_Id":pc
-    }
-
-    dispatch(assginpc(formData,setError,navigation))
-    
+const fetchbeat = async () => {
+  try {
+    console.log("ok");
+   await dispatch(beatfetch());
+  } catch (error) {
+    // Handle or log error
+    console.error('Failed to fetch data:', error);
   }
+};
+
+
+const handleRemove=(beat,officer_id,time)=>{
+const formData = {beat:beat,officer_id:officer_id,time:time};
+dispatch(beatremove(formData));
+}
+
+const handleAvailable= async()=>{
+
+    await dispatch(beatavailable());
+  }
+
+  const handleUpdate =async(officer_name,officer_id)=>{
+    const formData = {officer_id:officer_id,officer_name:officer_name,beat:beat,time:time}
+    await dispatch(beatupdate(formData));
+  }
+
+
 
   return (
     <SafeAreaView className="w-full">
@@ -75,145 +84,127 @@ console.log("ok")
       <View className="w-full h-[100px] bg-[#8b98d8] flex justify-center ">
         <Text className="font-extrabold text-3xl text-black ml-7">E-BEAT</Text>
       </View>
-      <View className="flex w-full justify-center items-center">
-        <View className="w-[80%] flex justify-center">
-          <Dropdown
-            style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={beat}
-        
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? 'Select Beat' : '...'}
-            searchPlaceholder="Search..."
-            value={value}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-              setValue(item.value);
-              setIsFocus(false);
-            }}
-          />
-        </View>
-      </View>
 
-      {beat_subdivision[value] &&
-    <View className="flex w-full justify-center items-center">
-        <View className="w-[80%] flex justify-center">
-          <Dropdown
-            style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={beat_subdivision[value]}
-            search
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? 'Select Beat' : '...'}
-            searchPlaceholder="Search..."
-            value={value1}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-              setValue1(item.value);
-              setLocation(item.location.join(','));
-              setIsFocus(false);
-            }}
-          />
-        </View>
-      </View>}
 
-      <View className="flex w-full justify-center items-center">
-        <View className="w-[80%] flex justify-center">
-          <Dropdown
-            style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={officers}
-        
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? 'Select Officer' : '...'}
-            searchPlaceholder="Search..."
-            value={value}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-              setPc(item.value);
-              setIsFocus(false);
-            }}
-          />
+     
+
+<View>
+    {beatData?.map((beat,id)=>(
+        <View key={id} className=" flex flex-row text-lg gap-4 font-extrabold">
+          <Text> Beat: {beat.beat}</Text>
+          <Text>{beat.officer_id}</Text> 
+          <Text>{beat.Officer_name}</Text>
+          {beat?.officer_id==="" ?  <Icon onPress={async ()=>{
+            setBeat(beat.beat);
+            setTime(beat.time);
+            handleAvailable(beat.beat,beat.time);
+            setModalVisible(!modalVisible);
+          }} name="add-circle-outline" size={30} color="#25b84c"></Icon> :           
+          <Icon onPress={()=>{
+            handleRemove(beat.beat,beat.officer_id,beat.time);
+          }} name="remove-circle-outline" size={30} color="#900"></Icon>}
+          
         </View>
-      </View>
+    ))}
+     </View>
       <View>
-       
-      <Text>Start Time: </Text>
-      <DatePicker date={startdate} mode='datetime' minimumDate={new Date()}  onDateChange={setStartDate} />
-      <Text>End Time: </Text>
-      <DatePicker date={enddate} mode='datetime' minimumDate={new Date()}  onDateChange={setEndDate} />
-    
     </View>
-    <Button
+    
+    </ScrollView>
+
+    <Modal
+    animationType="slide"
+    transparent={true}
+    visible={modalVisible}
+    onRequestClose={() => {
+      Alert.alert('Modal has been closed.');
+      setModalVisible(!modalVisible);
+    }}>
+    <ScrollView className="flex-1 mt-24">
+      <View style={styles.modalView}>
+
+         <View className="flex w-full justify-center items-center">
+    <View className="w-[80%] flex justify-center">
+    {available?.map((beat,id)=>(
+        <View key={id}  className="  pb-2 flex flex-row text-lg gap-4 font-extrabold">
+        
+          <Text className=" bg-red-800">{beat.Officer_Id}</Text> 
+          <Text className=" bg-red-800">{beat.Officer_Name}</Text>
+          <Button
         mode="contained"
-       
-        onPress={() => {
-          handleAssign();
+        onPress={()=>{
+          console.log("Pressed" + beat.beat)
+          handleUpdate(beat.Officer_Name,beat.Officer_Id);
+          setModalVisible(!modalVisible);
         }}
        >
-        Assign
+        Add!
       </Button>
+         
+          
+        </View>
+    ))}
+    </View>
+  </View> 
+
+        <Pressable
+          style={[styles.button, styles.buttonClose]}
+          onPress={() => setModalVisible(!modalVisible)}>
+            <View>
+    
+     </View>
+          <Text style={styles.textStyle}>Cancel</Text>
+        </Pressable>
+      </View>
     </ScrollView>
+  </Modal>
     </SafeAreaView>
   );
 }
 
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+});
+
 export default SELECTBEAT;
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    padding: 16,
-  },
-  dropdown: {
-    height: 50,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-  },
-  icon: {
-    marginRight: 5,
-  },
-  label: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
-  },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
-});

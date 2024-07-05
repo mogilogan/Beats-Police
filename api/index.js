@@ -16,7 +16,16 @@ API.interceptors.request.use(req => {
 // login api
 export const signIn = formData => API.post('/logins', formData);
 export const aboutUser = formData => API.post('/about', formData);
-export const CheckAssign = formData => API.post('/assign/check',formData);
-export const assignPc = formData => API.post('/assign',formData);
+
+
+
+export const beatFetch = () => API.get('/assign/check');
+export const beatRemove = formData => API.post('/assign/remove',formData);
+export const beatAvailable = () => API.get('/assign/available');
+export const beatUpdate = formData => API.post('/assign/update',formData);
+
+export const beatAssigned = formData => API.post('/assign/assigned',formData);
+
+
 
 

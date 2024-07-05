@@ -12,7 +12,7 @@ import {connect, useDispatch, useSelector} from 'react-redux';
 
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {checkassign} from '../../actions/about';
+import {beatassigned} from '../../actions/about';
 import {useFocusEffect} from '@react-navigation/native';
 import Check from './Tracker';
 
@@ -20,13 +20,11 @@ import Check from './Tracker';
 
 const CHECK = ({navigation}) => {
   const dispatch = useDispatch();
-  const {checkData} = useSelector(state => state.check);
+  const {checkData} = useSelector(state => state.beat);
 
-  const [socket, setSocket] = React.useState(null);
-  const [error, setError] = React.useState('');
-  const [userLocation, setUserLocation] = React.useState();
+
+
   const [user, setUser] = React.useState();
-
   const [dt, setDt] = React.useState(new Date().toLocaleString());
 
   React.useEffect(() => {
@@ -34,32 +32,37 @@ const CHECK = ({navigation}) => {
       setDt(new Date().toLocaleString());
     }, 1000);
 
+ 
+
     return () => clearInterval(secTimer);
   }, []);
 
   useFocusEffect(
     React.useCallback(() => {
-      const fetchData = async () => {
-        try {
-          const userString = await AsyncStorage.getItem('beatsauth');
-          const user = JSON.parse(userString);
-          if (user?.userData) {
-            const formData = {Officer_Id: user.userData.Officer_Id};
-            dispatch(checkassign(formData, setError));
-            setUser(user);
-          }
-        } catch (error) {
-          // Handle or log error
-          console.error('Failed to fetch data:', error);
-        }
-      };
-
+      
       fetchData();
       return () => {
         // Any cleanup would go here
       };
     }, [dispatch, navigation]),
   );
+
+  const fetchData = async () => {
+    try {
+      const userString = await AsyncStorage.getItem('beatsauth');
+      const user = JSON.parse(userString);
+ 
+      if (user?.userData) {
+        const formData = {officer_id: user.userData.Officer_Id};
+        dispatch(beatassigned(formData));
+        setUser(user);
+      }
+    } catch (error) {
+      // Handle or log error
+      console.error('Failed to fetch data:', error);
+    }
+  };
+
 
   React.useEffect(() => {
     const backAction = () => {
@@ -84,35 +87,13 @@ const CHECK = ({navigation}) => {
 
   return (
     <View className="flex-1  mt-9">
-       {/* {checkData?.assigned_by !== null && (
-          <View className="flex flex-col">
-            <View className="flex flex-row">
-              <Text>Beat: </Text>
-              <Text>{checkData?.beat}</Text>
-            </View>
-            <View className="flex flex-row">
-              <Text>hamplets: </Text>
-              <Text>{checkData?.hamplets}</Text>
-            </View>
-            <View className="flex flex-row">
-              <Text>Start Time: </Text>
-              <Text>{checkData?.start_time}</Text>
-            </View>
-            <View className="flex flex-row">
-              <Text>End Time: </Text>
-              <Text>{checkData?.end_time}</Text>
-            </View>
-            <View className="flex flex-row">
-              <Text>Assigned_by: </Text>
-              <Text>{checkData?.assigned_by}</Text>
-            </View>
-            
-          </View>
-        )} */}
+{checkData != null || undefined ?
     
-      <Check/>
-     
+      <Check user={user} beat={checkData.beat} time={checkData.time} /> :
 
+      <Text>Loading</Text>
+     
+}
     </View>
   );
 };

@@ -6,4 +6,10 @@ export const LOGOUT = 'LOGOUT';
 //user details
 export const ABOUT = 'ABOUT';
 
-export const CHECK  = "CHECK";
+export const BEAT_FETCH  = "BEAT_FETCH";
+export const BEAT_AVAILABLE  = "BEAT_AVAILABLE";
+export const BEAT_REMOVE  = "BEAT_REMOVE";
+export const BEAT_UPDATE = "BEAT_UPDATE";
+
+export const BEAT_ASSIGNED = "BEAT_ASSIGNED";
+

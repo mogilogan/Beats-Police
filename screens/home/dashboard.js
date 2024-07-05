@@ -15,7 +15,7 @@ export function HOMEDB({navigation}) {
               onPress={() => {
                 navigation.navigate('SelectBeat');
               }}>
-              <Text className="text-xl font-bold">Assign</Text>
+              <Text className="text-xl font-bold">Beat Details</Text>
             </Pressable>
           </View>
           <View className="w-[80%] flex justify-center items-center bg-[#9ca7dd] h-[100px] rounded-xl">

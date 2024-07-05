@@ -1,25 +1,15 @@
 import React, {useState, useEffect} from 'react';
-
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-
 import LOGINPAGE from '../screens/login/loginpage';
-
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-
 import TimeDisplay from '../screens/time/TimeDisplay';
-
 import Home from './Home';
 
 const Stack = createStackNavigator();
 
-
-
-
-const Screens = ({navigation}) => {
+const Screens = () => {
+  const navigation = useNavigation();
   const [dt, setDt] = useState(new Date().toLocaleString());
   useEffect(() => {
     const checkUser = async () => {
@@ -42,7 +32,7 @@ const Screens = ({navigation}) => {
   }, []);
 
   return (
-    <NavigationContainer>
+    <>
       <Stack.Navigator>
         <Stack.Screen
           name="LoginPage"
@@ -56,7 +46,7 @@ const Screens = ({navigation}) => {
         />
       </Stack.Navigator>
       <TimeDisplay />
-    </NavigationContainer>
+    </>
   );
 };
 

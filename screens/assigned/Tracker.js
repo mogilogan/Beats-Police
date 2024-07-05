@@ -1,39 +1,48 @@
 import * as React from 'react';
-import {View, Text, PermissionsAndroid, Button, BackHandler, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  PermissionsAndroid,
+  Button,
+  BackHandler,
+  Alert,
+} from 'react-native';
 
-import {connect, useDispatch, useSelector} from 'react-redux';
+
+import {useDispatch, useSelector} from 'react-redux';
 import MapView, {Circle, Marker} from 'react-native-maps';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {checkassign} from '../../actions/about';
 import {useFocusEffect} from '@react-navigation/native';
 
 import Geolocation from '@react-native-community/geolocation';
 import io from 'socket.io-client';
 
-const Check = ({navigation}) => {
+import {beat_subdivision} from '../assign/data';
+
+const Check = ({navigation, beat, time, user}) => {
   const dispatch = useDispatch();
-  const {checkData} = useSelector(state => state.check);
 
   const [socket, setSocket] = React.useState(null);
   const [error, setError] = React.useState('');
   const [userLocation, setUserLocation] = React.useState();
-  const [user,setUser] = React.useState(); 
-  const coordinate = {latitude: 11.924047982381875, longitude: 79.8196753};
-  const radius = 350;
+  const [message, setMessage] = React.useState('Determining location...');
 
-  const initializeSocket =()=>{
-     // Initialize the socket connection
-     const newSocket = io('http://10.0.2.2:8000');
-     setSocket(newSocket);
- 
-     return () => {
-       // Disconnect the socket connection when the component unmounts
-       if (socket) {
-         socket.disconnect();
-       }
-     };
-  }
+  const coordinate = {latitude: 11.924047982381875, longitude: 79.8196753};
+  const radius = 200;
+
+  // Initialize the socket connection
+  const initializeSocket = () => {
+    const newSocket = io('http://10.0.2.2:8000');
+    setSocket(newSocket);
+
+    return () => {
+      // Disconnect the socket connection when the component unmounts
+    
+        newSocket.disconnect();
+    
+    };
+  };
 
   const requestLocationPermission = async () => {
     try {
@@ -57,43 +66,21 @@ const Check = ({navigation}) => {
     }
   };
 
+  const sendLocation = () => {
+    // Send location data to the backend server when the user's location changes
+    const workerId = user?.userData?.Officer_Id;
 
-  const sendLocation = ()=>{
-// Send location data to the backend server when the user's location changes
-const workerId = user?.userData?.Officer_Id
-
-if (socket && userLocation) {
-  const { latitude, longitude } = userLocation;
-  const data = {"latitude": latitude, "longitude":longitude,"workerId":workerId }
-  socket.emit('workerLocation', data);
-  console.log('Sent worker location:', { latitude, longitude, workerId });
-}
-  }
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchData = async () => {
-        try {
-          const userString = await AsyncStorage.getItem('beatsauth');
-          const user = JSON.parse(userString);
-          if (user?.userData) {
-            const formData = { Officer_Id: user.userData.Officer_Id };
-            dispatch(checkassign(formData, setError));
-            setUser(user);
-          }
-        } catch (error) {
-          // Handle or log error
-          console.error("Failed to fetch data:", error);
-        }
+    if (socket && userLocation) {
+      const {latitude, longitude} = userLocation;
+      const data = {
+        latitude: latitude,
+        longitude: longitude,
+        workerId: workerId,
       };
-
-    
-fetchData();
-      return () => {
-        // Any cleanup would go here
-      };
-    }, [dispatch, navigation])
-  );
+      socket.emit('workerLocation', data);
+      console.log('Sent worker location:', {latitude, longitude, workerId});
+    }
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -102,6 +89,23 @@ fetchData();
           const {latitude, longitude} = position.coords;
           setUserLocation({latitude, longitude});
           console.log(latitude + ' ' + longitude);
+          let isInCircle = false;
+          for (const location of beat_subdivision[beat] || []) {
+            const distance = getDistanceFromLatLonInMeters(
+              latitude,
+              longitude,
+              location.location[0],
+              location.location[1],
+            );
+            if (distance <= radius) {
+              isInCircle = true;
+              break;
+            }
+          }
+
+          setMessage(
+            isInCircle ? 'You are in a circle' : 'You are not in a circle',
+          );
         },
         error => console.log(error.message),
         {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
@@ -118,9 +122,9 @@ fetchData();
   React.useEffect(() => {
     initializeSocket();
     requestLocationPermission();
-
   }, []);
 
+  // press back button to exit app
   React.useEffect(() => {
     const backAction = () => {
       Alert.alert('Hold on!', 'Are you sure you want to go back?', [
@@ -142,42 +146,26 @@ fetchData();
     return () => backHandler.remove();
   }, []);
 
+  const getDistanceFromLatLonInMeters = (lat1, lon1, lat2, lon2) => {
+    const R = 6371e3; // Radius of the Earth in meters
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in meters
+    return d;
+  };
 
   return (
     <View className="flex-1  ">
-
       {/* {checkData?.start_time } */}
       <Text className="pt-5 pl-2">#E-BEAT-PROFILE</Text>
       <View className="items-center justify-center  gap-6">
-        {checkData?.assigned_by !== null && (
-          <View className="flex flex-col">
-            <View className="flex flex-row">
-              <Text>Beat: </Text>
-              <Text>{checkData?.beat}</Text>
-            </View>
-            <View className="flex flex-row">
-              <Text>hamplets: </Text>
-              <Text>{checkData?.hamplets}</Text>
-            </View>
-            <View className="flex flex-row">
-              <Text>Start Time: </Text>
-              <Text>{checkData?.start_time}</Text>
-            </View>
-            <View className="flex flex-row">
-              <Text>End Time: </Text>
-              <Text>{checkData?.end_time}</Text>
-            </View>
-            <View className="flex flex-row">
-              <Text>Assigned_by: </Text>
-              <Text>{checkData?.assigned_by}</Text>
-            </View>
-            <View className="flex flex-row">
-              <Text>Coorodinates: </Text>
-              <Text>{userLocation?.latitude}</Text>
-            </View>
-          </View>
-        )}
-
         <MapView
           className=" w-full min-h-[400px]"
           initialRegion={{
@@ -185,20 +173,45 @@ fetchData();
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}>
-          <Circle
-            center={coordinate}
-            radius={radius}
-            strokeColor="rgba(0, 0, 255, 0.5)" // Blue color with 50% transparency
-            fillColor="rgba(0, 0, 255, 0.1)" // Light blue color with 10% transparency
+          <Marker
+            coordinate={{
+              latitude: userLocation ? userLocation.latitude : 0,
+              longitude: userLocation ? userLocation.longitude : 0,
+            }}
+            title={'mine'}
           />
-          {userLocation && <Marker coordinate={userLocation} />}
+          {beat_subdivision[beat] &&
+            beat_subdivision[beat].map((location, index) => (
+              <Circle
+                key={index}
+                center={{
+                  latitude: location.location[0],
+                  longitude: location.location[1],
+                }}
+                radius={radius}
+                strokeColor={location.color} // Blue color with 50% transparency
+                fillColor={`${location.color}33`} // Light blue color with 10% transparency
+              />
+            ))}
+
         </MapView>
+
+        <Text
+          style={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            backgroundColor: 'white',
+            padding: 10,
+          }}>
+          {message}
+        </Text>
         <Button
-  onPress={sendLocation}
-  title="Reset Location"
-  color="#841584"
-  accessibilityLabel="Learn more about this purple button"
-/>
+          onPress={sendLocation}
+          title="Reset Location"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
       </View>
     </View>
   );
