@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {signin} from '../../actions/auth';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
 export function LOGINPAGE({navigation}) {
   const [officer, setOfficer] = React.useState('');
@@ -28,7 +28,7 @@ export function LOGINPAGE({navigation}) {
       return () => {
         // Optional cleanup can go here
       };
-    }, [navigation])
+    }, [navigation]),
   );
 
   const handlelogin = async () => {
@@ -37,34 +37,31 @@ export function LOGINPAGE({navigation}) {
   };
 
   return (
-    <SafeAreaView style={styles.logInPage}>
-      <Image
-        style={styles.logInPageChild}
-        resizeMode="cover"
-        source={require('./Polics.png')}
-      />
-      <View style={[styles.logItem, styles.logInPageChild]} />
-
-      <View style={[styles.component3, styles.componentLayout]}>
+    <View className="flex relative justify-center gap-4 items-center w-screen h-screen">
+      <View className="absolute left-0 top-0">
+        <Image
+          className="w-screen absolute h-screen bg-blue-300"
+          resizeMode="cover"
+          source={require('./Polics.png')}
+        />
+      </View>
+      <View className="w-screen h-screen absolute bg-blue-500 left-0 right-0 opacity-70 z-10"></View>
+      <View className="bg-slate-500 z-50 w-[50%] rounded-xl">
         <TextInput
-          placeholder="username"
-          style={[styles.component3Child]}
-          mode="outlined"
+          placeholder="Username"
           onChangeText={newStatus => setOfficer(newStatus)}
         />
       </View>
-      <View style={[styles.component4, styles.componentLayout]}>
+      <View className="bg-slate-500 z-50 w-[50%] rounded-xl">
         <TextInput
           placeholder="Password"
-          style={[styles.component3Child]}
           secureTextEntry={true}
-          mode="outlined"
           onChangeText={newStatus => setPassword(newStatus)}
         />
       </View>
       <Button
+        className="z-50 bg-slate-400 w-[40%]"
         mode="contained"
-        style={[styles.logInPageItem, styles.logInPageItemBorder]}
         onPress={() => {
           handlelogin();
         }}
@@ -73,7 +70,7 @@ export function LOGINPAGE({navigation}) {
         }}>
         LOG IN
       </Button>
-    </SafeAreaView>
+    </View>
   );
 }
 

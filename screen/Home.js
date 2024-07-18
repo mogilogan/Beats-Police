@@ -7,16 +7,16 @@ import REPORTBEAT from '../screens/reports/reportbeat';
 import PROFILE from '../screens/home/profile';
 import DIRECTORY from '../screens/home/directory';
 import ABOUT from '../screens/home/About';
-
+import OFFICERDETAILS from '../screens/home/OfficerDetail';
 import TRACKING from '../screens/tracking/tracking';
 import CHECK from '../screens/assigned/Check';
 import Material from 'react-native-vector-icons/MaterialIcons';
-
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import TEAM from '../screens/home/Developers';
 
 const Tab = createBottomTabNavigator();
 const SettingsStack = createNativeStackNavigator();
@@ -25,15 +25,15 @@ const Stack = createStackNavigator();
 
 const TopNav = () => {
   return (
-    <TopTab.Navigator  screenOptions={{
-        
-        tabBarActiveTintColor: '#e91e63',
-        tabBarLabelStyle: { fontSize: 12 },
-        tabBarStyle: { backgroundColor: 'powderblue', paddingTop: 35, },
+    <TopTab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: 'white',
+        tabBarLabelStyle: {fontSize: 14, fontWeight: 'bold'},
+        tabBarStyle: {backgroundColor: '#404e5a', paddingTop: 35},
       }}>
       <TopTab.Screen
         name="Home"
-        options={{ tabBarLabel: 'Home' }}
+        options={{tabBarLabel: 'Home'}}
         children={() => (
           <SettingsStack.Navigator>
             <SettingsStack.Screen
@@ -55,7 +55,11 @@ const TopNav = () => {
           </SettingsStack.Navigator>
         )}
       />
-      <TopTab.Screen options={{ tabBarLabel: 'Tracking' }} name="Settings" component={TRACKING} />
+      <TopTab.Screen
+        options={{tabBarLabel: 'Tracking'}}
+        name="Settings"
+        component={TRACKING}
+      />
     </TopTab.Navigator>
   );
 };
@@ -126,7 +130,11 @@ function Home({}) {
               options={{header: () => null}}
             />
             <SettingsStack.Screen name="Directory" component={DIRECTORY} />
-            <Stack.Screen name="About" component={ABOUT} />
+            <SettingsStack.Screen
+              name="OfficerDetail"
+              component={OFFICERDETAILS}
+            />
+            <SettingsStack.Screen name="Team" component={TEAM} />
           </SettingsStack.Navigator>
         )}
       </Tab.Screen>
