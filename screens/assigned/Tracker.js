@@ -76,6 +76,7 @@ const Check = ({navigation, beat, time, user}) => {
         latitude: latitude,
         longitude: longitude,
         workerId: workerId,
+        beat:beat
       };
       socket.emit('workerLocation', data);
       console.log('Sent worker location:', {latitude, longitude, workerId});
@@ -168,6 +169,7 @@ const Check = ({navigation, beat, time, user}) => {
       <View className="items-center justify-center  gap-6">
         <MapView
           className=" w-full min-h-[400px]"
+          moveOnMarkerPress={false}
           initialRegion={{
             ...coordinate,
             latitudeDelta: 0.0922,
