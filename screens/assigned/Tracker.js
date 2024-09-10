@@ -20,10 +20,10 @@ import io from 'socket.io-client';
 
 import {beat_subdivision} from '../assign/data';
 
-const Check = ({navigation, beat, time, user}) => {
+const Check = ({navigation, beat, user,socket}) => {
   const dispatch = useDispatch();
 
-  const [socket, setSocket] = React.useState(null);
+  // const [socket, setSocket] = React.useState(null);
   const [error, setError] = React.useState('');
   const [userLocation, setUserLocation] = React.useState();
   const [message, setMessage] = React.useState('Determining location...');
@@ -32,17 +32,17 @@ const Check = ({navigation, beat, time, user}) => {
   const radius = 200;
 
   // Initialize the socket connection
-  const initializeSocket = () => {
-    const newSocket = io('http://10.0.2.2:8000');
-    setSocket(newSocket);
+  // const initializeSocket = () => {
+  //   const newSocket = io('http://10.0.2.2:8000');
+  //   setSocket(newSocket);
 
-    return () => {
-      // Disconnect the socket connection when the component unmounts
+  //   return () => {
+  //     // Disconnect the socket connection when the component unmounts
     
-        newSocket.disconnect();
+  //       newSocket.disconnect();
     
-    };
-  };
+  //   };
+  // };
 
   const requestLocationPermission = async () => {
     try {
@@ -121,7 +121,7 @@ const Check = ({navigation, beat, time, user}) => {
   }, [socket, userLocation]);
 
   React.useEffect(() => {
-    initializeSocket();
+    // initializeSocket();
     requestLocationPermission();
   }, []);
 

@@ -21,9 +21,10 @@ const Fetch = ({user,beat}) => {
   const [workers, setWorkers] = useState([]);
    
 
-  const [value, setValue] = useState(0);
-  const [isFocus, setIsFocus] = useState(false);
-
+  const [value, setValue] = useState(null);
+  const [label, setLabel] = useState(null);
+    const [isFocus, setIsFocus] = useState(false);
+console.log(value);
   const renderLabel = () => {
     if (value || isFocus) {
       return (
@@ -71,8 +72,6 @@ const Fetch = ({user,beat}) => {
     if (socket) {
       socket.on('currentLocations', locations => {
         setWorkers(Object.values(locations)); // Assuming locations is an object with worker IDs as keys
-        setValue(Object.values(locations)[0]);
-       
       });
     }
   }, [socket]);
@@ -81,11 +80,11 @@ const Fetch = ({user,beat}) => {
   const getTimeBasedValue = (currentDate) => {
     const hours = currentDate.getHours();
     if (hours >= 8 && hours < 16) {
-      setValue(2);
+       setTime(2);
     } else if (hours >= 16 && hours < 24) {
-        setValue(3);
+        setTime(3);
     } else {
-        setValue(1);
+       setTime(1);
     }
   };
 
@@ -99,10 +98,7 @@ const Fetch = ({user,beat}) => {
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
           iconStyle={styles.iconStyle}
-          data={Object.keys(workers).map(worker => ({
-            label: worker,
-            value: workers[worker]
-          }))}
+          data={workers}
           search={false}
           maxHeight={300}
           labelField="label"
@@ -114,6 +110,7 @@ const Fetch = ({user,beat}) => {
           onBlur={() => setIsFocus(false)}
           onChange={item => {
             setValue(item.value);
+            setLabel(item.label);
             setIsFocus(false);
           }}
           
@@ -124,8 +121,8 @@ const Fetch = ({user,beat}) => {
        {value?.latitude &&
           <Marker
          
-            coordinate={{ latitude: value?.latitude, longitude: value?.longitude }}
-            title={value != null ? String.valueOf(value.beat) : ""}
+            coordinate={{ latitude: value.latitude ? value.latitude : 0, longitude: value.latitude ? value.latitude : 0}}
+            title={value != null ? label : ""}
           />
        }
         
@@ -151,7 +148,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 0.5,
     borderRadius: 8,
-    paddingHorizontal: 8,
+    paddingHorizontal: 40,
   },
   icon: {
     marginRight: 5,
