@@ -76,7 +76,7 @@ const Tracking = ({navigation}) => {
   return (
     <View className="flex-1  mt-9">
       {beatData != null || undefined ? (
-        <Fetch user={user} beat={beatData}  />
+        <Fetch user={user} beat={beatData} />
       ) : (
         <Text>Loading</Text>
       )}

@@ -8,7 +8,6 @@ import {
   Alert,
 } from 'react-native';
 
-
 import {useDispatch, useSelector} from 'react-redux';
 import MapView, {Circle, Marker} from 'react-native-maps';
 
@@ -20,7 +19,7 @@ import io from 'socket.io-client';
 
 import {beat_subdivision} from '../assign/data';
 
-const Check = ({navigation, beat, user,socket}) => {
+const Check = ({navigation, beat, user, socket}) => {
   const dispatch = useDispatch();
 
   // const [socket, setSocket] = React.useState(null);
@@ -38,9 +37,9 @@ const Check = ({navigation, beat, user,socket}) => {
 
   //   return () => {
   //     // Disconnect the socket connection when the component unmounts
-    
+
   //       newSocket.disconnect();
-    
+
   //   };
   // };
 
@@ -76,7 +75,7 @@ const Check = ({navigation, beat, user,socket}) => {
         latitude: latitude,
         longitude: longitude,
         workerId: workerId,
-        beat:beat
+        beat: beat,
       };
       socket.emit('workerLocation', data);
       console.log('Sent worker location:', {latitude, longitude, workerId});
@@ -163,12 +162,12 @@ const Check = ({navigation, beat, user,socket}) => {
   };
 
   return (
-    <View className="flex-1  ">
+    <View className="flex-1 relative ">
       {/* {checkData?.start_time } */}
-      <Text className="pt-5 pl-2">#E-BEAT-PROFILE</Text>
-      <View className="items-center justify-center  gap-6">
+
+      <View className="items-center justify-center w-screen h-[100%]">
         <MapView
-          className=" w-full min-h-[400px]"
+          className=" w-full h-full"
           moveOnMarkerPress={false}
           initialRegion={{
             ...coordinate,
@@ -195,7 +194,6 @@ const Check = ({navigation, beat, user,socket}) => {
                 fillColor={`${location.color}33`} // Light blue color with 10% transparency
               />
             ))}
-
         </MapView>
 
         <Text
@@ -205,15 +203,19 @@ const Check = ({navigation, beat, user,socket}) => {
             left: 10,
             backgroundColor: 'white',
             padding: 10,
-          }}>
+          }}
+          className="text-black">
           {message}
         </Text>
-        <Button
-          onPress={sendLocation}
-          title="Reset Location"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
+        <View className="absolute bottom-5">
+          <Button
+            onPress={sendLocation}
+            title="Reset Location"
+            color="#841584"
+            accessibilityLabel="Learn more about this purple button"
+            className=""
+          />
+        </View>
       </View>
     </View>
   );
