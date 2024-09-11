@@ -17,6 +17,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import TEAM from '../screens/home/Developers';
+import NOTIFICATIONS from '../screens/home/About';
 
 const Tab = createBottomTabNavigator();
 const SettingsStack = createNativeStackNavigator();
@@ -25,15 +27,17 @@ const Stack = createStackNavigator();
 
 const TopNav = () => {
   return (
-    <TopTab.Navigator  screenOptions={{
-        
-        tabBarActiveTintColor: '#e91e63',
-        tabBarLabelStyle: { fontSize: 12 },
-        tabBarStyle: { backgroundColor: 'powderblue', paddingTop: 35, },
+    <TopTab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: 'white',
+        tabBarLabelStyle: {fontSize: 14, fontWeight: 'bold'},
+        tabBarStyle: {backgroundColor: '#404e5a', paddingTop: 35},
       }}>
       <TopTab.Screen
         name="Home"
-        options={{ tabBarLabel: 'Home' }}
+        options={{tabBarLabel: 'Home'}}
+        component={SELECTBEAT}
+        /*
         children={() => (
           <SettingsStack.Navigator>
             <SettingsStack.Screen
@@ -54,8 +58,13 @@ const TopNav = () => {
             />
           </SettingsStack.Navigator>
         )}
+        */
       />
-      <TopTab.Screen options={{ tabBarLabel: 'Tracking' }} name="Settings" component={TRACKING} />
+      <TopTab.Screen
+        options={{tabBarLabel: 'Tracking'}}
+        name="Settings"
+        component={TRACKING}
+      />
     </TopTab.Navigator>
   );
 };
@@ -79,17 +88,17 @@ function Home({}) {
 
           if (route.name === 'DashBoard') {
             iconName = 'dashboard';
-            color = '#900';
+            color = 'blue';
           } else if (route.name === 'Profile') {
             iconName = 'person';
-            color = '#fff54';
+            color = 'blue';
           } else if (route.name === 'Live') {
             iconName = 'person';
-            color = '#fff50';
+            color = 'blue';
           }
 
           // You can return any component that you like here!
-          return <Material name={iconName} size={30} color="#900" />;
+          return <Material name={iconName} size={30} color="#404e5a" />;
         },
         headerShown: false,
       })}>
@@ -125,8 +134,22 @@ function Home({}) {
               component={PROFILE}
               options={{header: () => null}}
             />
-            <SettingsStack.Screen name="Directory" component={DIRECTORY} />
+            <SettingsStack.Screen
+              name="about"
+              component={NOTIFICATIONS}
+              options={{header: () => null}}
+            />
+            <SettingsStack.Screen
+              name="Directory"
+              component={DIRECTORY}
+              options={{header: () => null}}
+            />
             <Stack.Screen name="About" component={ABOUT} />
+            <SettingsStack.Screen
+              name="Team"
+              component={TEAM}
+              options={{header: () => null}}
+            />
           </SettingsStack.Navigator>
         )}
       </Tab.Screen>
