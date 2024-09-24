@@ -20,6 +20,8 @@ const Tracking = ({navigation}) => {
   const [user, setUser] = React.useState();
   const [dt, setDt] = React.useState(new Date().toLocaleString());
 
+  
+
   React.useEffect(() => {
     let secTimer = setInterval(() => {
       setDt(new Date().toLocaleString());
@@ -54,7 +56,7 @@ const Tracking = ({navigation}) => {
 
   React.useEffect(() => {
     const backAction = () => {
-      Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+      Alert.alert('Hold on!', 'Are you sure you want to exit?', [
         {
           text: 'Cancel',
           onPress: () => null,

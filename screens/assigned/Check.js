@@ -12,6 +12,7 @@ import {connect, useDispatch, useSelector} from 'react-redux';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {beatassigned} from '../../actions/about';
+import {updateReport} from '../../actions/report';
 import {useFocusEffect} from '@react-navigation/native';
 import Check from './Tracker';
 import io from 'socket.io-client';
@@ -93,8 +94,16 @@ const CHECK = ({navigation}) => {
 
   React.useEffect(() => {
     const checkTimeInterval = () => {
+      console.log('30sec');
       const currentTime = new Date();
       const currentHour = currentTime.getHours();
+      const formattedDate = `${String(currentTime.getDate()).padStart(
+        2,
+        '0',
+      )}-${String(currentTime.getMonth() + 1).padStart(
+        2,
+        '0',
+      )}-${currentTime.getFullYear()}`;
 
       // Define time intervals
       const intervals = {
@@ -102,6 +111,13 @@ const CHECK = ({navigation}) => {
         2: {start: 16, end: 24}, // 4pm to 12am
         3: {start: 0, end: 8}, // 12am to 8am
       };
+      const form = {
+        date: formattedDate,
+        time: checkData?.time,
+        beat: checkData.beat,
+        officer_id: checkData.officer_id,
+      };
+      dispatch(updateReport(form));
 
       if (checkData?.time) {
         const interval = intervals[checkData.time];
@@ -113,15 +129,12 @@ const CHECK = ({navigation}) => {
       }
     };
 
-    // Check time on component mount
     checkTimeInterval();
 
-    // Set interval to check time periodically
-    const intervalId = setInterval(checkTimeInterval, 60000); // Check every minute
+    let secTimer = setInterval(checkTimeInterval, 60000);
 
-    // Clean up interval on component unmount
-    return () => clearInterval(intervalId);
-  }, [checkData]);
+    return () => clearInterval(secTimer);
+  }, []);
 
   return (
     <View className="flex-1  mt-9 items-center justify-center">

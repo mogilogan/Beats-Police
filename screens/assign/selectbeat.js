@@ -37,7 +37,6 @@ export function SELECTBEAT({navigation}) {
   React.useEffect(() => {
     const fetchData = async () => {
       const userData = await AsyncStorage.getItem('beatsauth');
-
       if (userData) {
         setUser(JSON.parse(userData));
       } else {

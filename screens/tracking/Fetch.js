@@ -24,7 +24,7 @@ const Fetch = ({user, beat}) => {
   const [value, setValue] = useState(null);
   const [label, setLabel] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
-  console.log(value);
+  // console.log("value ="+ value);
   const renderLabel = () => {
     if (value || isFocus) {
       return (

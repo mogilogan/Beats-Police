@@ -13,3 +13,5 @@ export const BEAT_UPDATE = "BEAT_UPDATE";
 
 export const BEAT_ASSIGNED = "BEAT_ASSIGNED";
 
+export const REPORT = "REPORT";
+

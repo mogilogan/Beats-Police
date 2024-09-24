@@ -26,6 +26,10 @@ export const beatUpdate = formData => API.post('/assign/update',formData);
 
 export const beatAssigned = formData => API.post('/assign/assigned',formData);
 
+export const beatReport = formData => API.get('/report/all');
+
+export const UpdateReport = formData => API.post('/report/add',formData);
+
 
 
 

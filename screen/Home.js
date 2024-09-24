@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react';
 
-import HOMEDB from '../screens/home/dashboard';
+import HOMEDB from '../screens/profile/dashboard';
 import SELECTBEAT from '../screens/assign/selectbeat';
 
 import REPORTBEAT from '../screens/reports/reportbeat';
-import PROFILE from '../screens/home/profile';
-import DIRECTORY from '../screens/home/directory';
-import ABOUT from '../screens/home/About';
+import PROFILE from '../screens/profile/profile';
+import DIRECTORY from '../screens/profile/directory';
+import ABOUT from '../screens/profile/About';
 
 import TRACKING from '../screens/tracking/tracking';
 import CHECK from '../screens/assigned/Check';
@@ -17,8 +17,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import TEAM from '../screens/home/Developers';
-import NOTIFICATIONS from '../screens/home/About';
+import TEAM from '../screens/profile/Developers';
+import NOTIFICATIONS from '../screens/profile/About';
 
 const Tab = createBottomTabNavigator();
 const SettingsStack = createNativeStackNavigator();
@@ -36,8 +36,8 @@ const TopNav = () => {
       <TopTab.Screen
         name="Home"
         options={{tabBarLabel: 'Home'}}
-        component={SELECTBEAT}
-        /*
+        // component={HOMEDB}
+        
         children={() => (
           <SettingsStack.Navigator>
             <SettingsStack.Screen
@@ -58,7 +58,7 @@ const TopNav = () => {
             />
           </SettingsStack.Navigator>
         )}
-        */
+        
       />
       <TopTab.Screen
         options={{tabBarLabel: 'Tracking'}}
