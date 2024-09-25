@@ -57,12 +57,6 @@ const HOME = ({navigation}) => {
         <Text className="font-bold text-xl text-white ml-5">PROFILE</Text>
       </View>
 
-    
-
-        
-         
-       
-     
       <View className="flex justify-center items-center">
         <View className="flex flex-col justify-center items-center w-full pt-5 gap-5">
           <View className="w-[90%] bg-blue-400 h-[50px] rounded-md justify-center ">

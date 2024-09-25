@@ -88,7 +88,7 @@ const PROFILE = ({navigation}) => {
             <View className="flex flex-row">
               <Text className="text-black font-semibold text-lg">Rank:</Text>
               <Text className="text-black font-semibold text-lg">
-                {user?.userData?.rank}
+                {user?.userData?.rank == 1 ? 'SHO' : 'Beat Officer'}
               </Text>
             </View>
           </View>

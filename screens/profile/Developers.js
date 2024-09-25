@@ -47,7 +47,7 @@ const team = [
     linkedIn: 'https://www.linkedin.com/in/gowtham-balaji-19996029b/',
   },
   {
-    name: 'Mogi',
+    name: 'Moginder',
     unit: 'Back-end Developer',
     batch: "PTU - ECE'24",
     linkedIn: 'https://www.linkedin.com/in/mogiegan/',
