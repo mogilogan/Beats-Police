@@ -28,7 +28,7 @@ const Check = ({navigation, beat, user, socket}) => {
   const [message, setMessage] = React.useState('Determining location...');
 
   const coordinate = {latitude: 11.924047982381875, longitude: 79.8196753};
-  const radius = 200;
+  const radius = 400;
 
   // Initialize the socket connection
   // const initializeSocket = () => {
