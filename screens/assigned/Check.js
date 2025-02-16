@@ -28,7 +28,9 @@ const CHECK = ({navigation}) => {
 
   // Initialize the socket connection
   const initializeSocket = () => {
-    const newSocket = io('http://10.0.2.2:8000');
+    const newSocket = io(
+      'https://kvmsyxjgt4.execute-api.ap-south-1.amazonaws.com',
+    );
     setSocket(newSocket);
 
     return () => {

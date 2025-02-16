@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-const API = axios.create({baseURL: 'http://10.0.2.2:8000'});
+const API = axios.create({baseURL: 'https://kvmsyxjgt4.execute-api.ap-south-1.amazonaws.com'});
 
 API.interceptors.request.use(req => {
   if (AsyncStorage.getItem('beatsauth')) {
